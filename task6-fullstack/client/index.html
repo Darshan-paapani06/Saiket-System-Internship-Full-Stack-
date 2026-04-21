@@ -1,0 +1,1172 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UserVault — SaiKet Systems Task 6</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f0f1a 0%,
+          #1a1a2e 55%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        color: #e2e8f0;
+      }
+
+      ::placeholder {
+        color: rgba(255, 255, 255, 0.22);
+      }
+
+      input,
+      button,
+      select {
+        font-family: inherit;
+      }
+
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 0.4);
+        border-radius: 10px;
+      }
+      /* AUTH */
+
+      #auth-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .auth-box {
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .auth-logo {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .auth-icon {
+        width: 58px;
+        height: 58px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 14px;
+        font-size: 26px;
+      }
+
+      .auth-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #fff;
+        letter-spacing: -0.02em;
+        margin-bottom: 4px;
+      }
+
+      .auth-sub {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.35);
+      }
+
+      .auth-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        padding: 28px;
+      }
+
+      .tab-row {
+        display: flex;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+        margin-bottom: 24px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 10px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.22s;
+        text-transform: capitalize;
+      }
+
+      .tab-btn.active {
+        background: #6366f1;
+        color: #fff;
+      }
+
+      .field-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 6px;
+        margin-top: 14px;
+      }
+
+      .field-input {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 11px;
+        padding: 12px 15px;
+        font-size: 14px;
+        color: #fff;
+        outline: none;
+        transition: border-color 0.25s;
+      }
+
+      .field-input:focus {
+        border-color: #6366f1;
+      }
+
+      .field-input.err {
+        border-color: #ef4444;
+      }
+
+      .field-err {
+        color: #fca5a5;
+        font-size: 11px;
+        margin-top: 4px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: #6366f1;
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        margin-top: 18px;
+        transition: background 0.22s;
+      }
+
+      .submit-btn:hover {
+        background: #4f46e5;
+      }
+
+      .submit-btn:disabled {
+        background: rgba(99, 102, 241, 0.4);
+        cursor: not-allowed;
+      }
+      /* DASHBOARD */
+
+      #dashboard-page {
+        display: none;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(14px);
+        padding: 0 32px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-icon {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+
+      .nav-name {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+
+      .nav-tag {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.3);
+        letter-spacing: 0.1em;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .nav-username {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 13px;
+      }
+
+      .logout-btn {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #fca5a5;
+        border-radius: 9px;
+        padding: 7px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .logout-btn:hover {
+        background: rgba(239, 68, 68, 0.25);
+      }
+
+      .main {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 32px 20px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-bottom: 28px;
+      }
+
+      .stat-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 18px 20px;
+      }
+
+      .stat-num {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .stat-lbl {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .table-card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        overflow: hidden;
+      }
+
+      .table-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .table-title {
+        color: #fff;
+        font-size: 17px;
+        font-weight: 700;
+        margin: 0;
+        flex: 1;
+      }
+
+      .search-inp {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 9px 14px;
+        font-size: 13px;
+        color: #fff;
+        outline: none;
+        width: 220px;
+      }
+
+      .search-inp:focus {
+        border-color: #6366f1;
+      }
+
+      .add-user-btn {
+        background: #6366f1;
+        border: none;
+        border-radius: 10px;
+        padding: 9px 20px;
+        font-size: 13px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.22s;
+        white-space: nowrap;
+      }
+
+      .add-user-btn:hover {
+        background: #4f46e5;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      thead tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      th {
+        padding: 12px 20px;
+        text-align: left;
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        font-weight: 600;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        transition: background 0.18s;
+      }
+
+      tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      tbody tr:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      td {
+        padding: 14px 20px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .user-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-name {
+        font-size: 14px;
+        color: #e2e8f0;
+        font-weight: 500;
+      }
+
+      .action-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .edit-btn {
+        background: rgba(99, 102, 241, 0.14);
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        color: #a5b4fc;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .edit-btn:hover {
+        background: rgba(99, 102, 241, 0.28);
+      }
+
+      .del-btn {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .del-btn:hover {
+        background: rgba(239, 68, 68, 0.28);
+      }
+
+      .empty-row {
+        padding: 48px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.25);
+        font-size: 14px;
+      }
+      /* MODAL */
+
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 500;
+        padding: 16px;
+      }
+
+      .modal-bg.show {
+        display: flex;
+      }
+
+      .modal {
+        background: #1e1e2e;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 22px;
+        padding: 28px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+
+      .modal-title {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .modal-x {
+        background: rgba(255, 255, 255, 0.07);
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .modal-save {
+        flex: 1;
+        background: #6366f1;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.22s;
+      }
+
+      .modal-save:hover {
+        background: #4f46e5;
+      }
+
+      .modal-save:disabled {
+        background: rgba(99, 102, 241, 0.4);
+        cursor: not-allowed;
+      }
+
+      .modal-cancel {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+      }
+
+      .del-modal-msg {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 14px;
+        line-height: 1.65;
+        margin-bottom: 22px;
+      }
+
+      .del-modal-msg strong {
+        color: #fff;
+      }
+
+      .confirm-del {
+        flex: 1;
+        background: #dc2626;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+      }
+      /* TOAST */
+
+      .toast {
+        position: fixed;
+        bottom: 26px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 26px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #fff;
+        border: 1px solid;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        white-space: nowrap;
+        animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+
+      .loading-text {
+        padding: 48px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      @media (max-width: 680px) {
+        .stats-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .nav-tag {
+          display: none;
+        }
+        .search-inp {
+          width: 140px;
+        }
+        th:nth-child(3),
+        td:nth-child(3),
+        th:nth-child(4),
+        td:nth-child(4) {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- AUTH PAGE -->
+    <div id="auth-page">
+      <div class="auth-box">
+        <div class="auth-logo">
+          <div class="auth-icon">⚡</div>
+          <div class="auth-title">UserVault</div>
+          <div class="auth-sub">SaiKet Systems — Task 6 Full Stack</div>
+        </div>
+        <div class="auth-card">
+          <div class="tab-row">
+            <button
+              class="tab-btn active"
+              id="tab-login"
+              onclick="switchTab('login')"
+            >
+              Login
+            </button>
+            <button
+              class="tab-btn"
+              id="tab-register"
+              onclick="switchTab('register')"
+            >
+              Register
+            </button>
+          </div>
+
+          <div id="reg-fields" style="display: none">
+            <label class="field-label">Full Name</label>
+            <input
+              id="reg-name"
+              class="field-input"
+              placeholder="Alex Rivera"
+            />
+            <div class="field-err" id="err-reg-name"></div>
+            <label class="field-label">Age</label>
+            <input
+              id="reg-age"
+              class="field-input"
+              type="number"
+              placeholder="22"
+            />
+            <div class="field-err" id="err-reg-age"></div>
+          </div>
+
+          <label class="field-label">Email Address</label>
+          <input
+            id="auth-email"
+            class="field-input"
+            type="email"
+            placeholder="you@example.com"
+          />
+          <div class="field-err" id="err-auth-email"></div>
+          <label class="field-label">Password</label>
+          <input
+            id="auth-password"
+            class="field-input"
+            type="password"
+            placeholder="••••••••"
+          />
+          <div class="field-err" id="err-auth-password"></div>
+
+          <button
+            class="submit-btn"
+            id="auth-submit-btn"
+            onclick="submitAuth()"
+          >
+            Sign In →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="dashboard-page">
+      <nav class="navbar">
+        <div class="nav-brand">
+          <div class="nav-icon">⚡</div>
+          <span class="nav-name">UserVault</span>
+          <span class="nav-tag">TASK 6</span>
+        </div>
+        <div class="nav-right">
+          <div class="avatar" id="nav-avatar" style="background: #6366f1"></div>
+          <span class="nav-username" id="nav-username"></span>
+          <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+      </nav>
+
+      <div class="main">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-num" id="s-total" style="color: #6366f1">0</div>
+            <div class="stat-lbl">Total Users</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="s-today" style="color: #10b981">0</div>
+            <div class="stat-lbl">Loaded Today</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" style="color: #f59e0b">Admin</div>
+            <div class="stat-lbl">Your Role</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <h2 class="table-title">All Users</h2>
+            <input
+              class="search-inp"
+              id="search-inp"
+              placeholder="Search name or email…"
+              oninput="renderTable()"
+            />
+            <button class="add-user-btn" onclick="openAddModal()">
+              + Add User
+            </button>
+          </div>
+          <div id="table-wrap">
+            <div class="loading-text">Loading users…</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD / EDIT MODAL -->
+    <div class="modal-bg" id="form-modal">
+      <div class="modal">
+        <div class="modal-hdr">
+          <span class="modal-title" id="modal-title">Add User</span>
+          <button class="modal-x" onclick="closeModal('form-modal')">✕</button>
+        </div>
+        <label class="field-label">Full Name</label>
+        <input id="m-name" class="field-input" placeholder="Alex Rivera" />
+        <div class="field-err" id="err-m-name"></div>
+        <label class="field-label">Email Address</label>
+        <input
+          id="m-email"
+          class="field-input"
+          type="email"
+          placeholder="alex@example.com"
+        />
+        <div class="field-err" id="err-m-email"></div>
+        <label class="field-label">Age</label>
+        <input id="m-age" class="field-input" type="number" placeholder="22" />
+        <div class="field-err" id="err-m-age"></div>
+        <div id="m-password-wrap">
+          <label class="field-label">Password</label>
+          <input
+            id="m-password"
+            class="field-input"
+            type="password"
+            placeholder="••••••••"
+          />
+          <div class="field-err" id="err-m-password"></div>
+        </div>
+        <div class="modal-actions">
+          <button class="modal-save" id="modal-save-btn" onclick="saveUser()">
+            Add User
+          </button>
+          <button class="modal-cancel" onclick="closeModal('form-modal')">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DELETE CONFIRM MODAL -->
+    <div class="modal-bg" id="del-modal">
+      <div class="modal">
+        <div class="modal-hdr">
+          <span class="modal-title">Delete User?</span>
+          <button class="modal-x" onclick="closeModal('del-modal')">✕</button>
+        </div>
+        <p class="del-modal-msg" id="del-msg"></p>
+        <div class="modal-actions">
+          <button class="confirm-del" onclick="confirmDelete()">
+            Yes, Delete
+          </button>
+          <button class="modal-cancel" onclick="closeModal('del-modal')">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API = "http://localhost:5000/api";
+      let token = localStorage.getItem("uv_token") || null;
+      let authUser = null;
+      try {
+        authUser = JSON.parse(localStorage.getItem("uv_user"));
+      } catch (e) {}
+      let allUsers = [];
+      let editingId = null;
+      let deletingUser = null;
+      let authMode = "login";
+
+      const COLORS = [
+        "#6366f1",
+        "#8b5cf6",
+        "#10b981",
+        "#f59e0b",
+        "#ef4444",
+        "#3b82f6",
+      ];
+
+      function avatarColor(id) {
+        return COLORS[id % COLORS.length];
+      }
+
+      function initials(name) {
+        return name
+          .split(" ")
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase()
+          .slice(0, 2);
+      }
+
+      async function apiFetch(path, method, body) {
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        if (token) headers["Authorization"] = "Bearer " + token;
+        const res = await fetch(API + path, {
+          method: method || "GET",
+          headers,
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        return res.json();
+      }
+
+      function switchTab(mode) {
+        authMode = mode;
+        document.getElementById("tab-login").className =
+          "tab-btn" + (mode === "login" ? " active" : "");
+        document.getElementById("tab-register").className =
+          "tab-btn" + (mode === "register" ? " active" : "");
+        document.getElementById("reg-fields").style.display =
+          mode === "register" ? "block" : "none";
+        document.getElementById("auth-submit-btn").textContent =
+          mode === "login" ? "Sign In →" : "Create Account →";
+        clearAuthErrors();
+      }
+
+      function clearAuthErrors() {
+        [
+          "err-reg-name",
+          "err-reg-age",
+          "err-auth-email",
+          "err-auth-password",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = "";
+        });
+        ["reg-name", "reg-age", "auth-email", "auth-password"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove("err");
+        });
+      }
+
+      function setAuthErr(id, msg) {
+        document.getElementById("err-" + id).textContent = msg;
+        document.getElementById(id).classList.add("err");
+      }
+
+      async function submitAuth() {
+        clearAuthErrors();
+        let valid = true;
+        const email = document.getElementById("auth-email").value.trim();
+        const pass = document.getElementById("auth-password").value;
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          setAuthErr("auth-email", "Enter a valid email");
+          valid = false;
+        }
+        if (!pass || pass.length < 6) {
+          setAuthErr("auth-password", "Minimum 6 characters");
+          valid = false;
+        }
+
+        let body = {
+          email,
+          password: pass,
+        };
+        if (authMode === "register") {
+          const name = document.getElementById("reg-name").value.trim();
+          const age = document.getElementById("reg-age").value;
+          if (!name || name.length < 2) {
+            setAuthErr("reg-name", "Name required (min 2 chars)");
+            valid = false;
+          }
+          if (!age || isNaN(age) || Number(age) < 1 || Number(age) > 120) {
+            setAuthErr("reg-age", "Valid age required (1–120)");
+            valid = false;
+          }
+          body = { ...body, name, age: Number(age) };
+        }
+        if (!valid) return;
+
+        const btn = document.getElementById("auth-submit-btn");
+        btn.disabled = true;
+        btn.textContent = "Please wait…";
+        const res = await apiFetch("/auth/" + authMode, "POST", body);
+        btn.disabled = false;
+        btn.textContent =
+          authMode === "login" ? "Sign In →" : "Create Account →";
+
+        if (!res.success) {
+          showToast(res.message, false);
+          return;
+        }
+        token = res.token;
+        authUser = res.data;
+        localStorage.setItem("uv_token", token);
+        localStorage.setItem("uv_user", JSON.stringify(authUser));
+        showDashboard();
+      }
+
+      function showDashboard() {
+        document.getElementById("auth-page").style.display = "none";
+        document.getElementById("dashboard-page").style.display = "block";
+        const av = document.getElementById("nav-avatar");
+        av.textContent = initials(authUser.name);
+        av.style.background = avatarColor(authUser.id);
+        document.getElementById("nav-username").textContent = authUser.name;
+        loadUsers();
+      }
+
+      async function loadUsers() {
+        document.getElementById("table-wrap").innerHTML =
+          '<div class="loading-text">Loading users…</div>';
+        const res = await apiFetch("/users");
+        if (!res.success) {
+          if (res.message && res.message.includes("token")) {
+            logout();
+            return;
+          }
+          document.getElementById("table-wrap").innerHTML =
+            '<div class="loading-text">Failed to load users.</div>';
+          return;
+        }
+        allUsers = res.data;
+        document.getElementById("s-total").textContent = allUsers.length;
+        document.getElementById("s-today").textContent = allUsers.length;
+        renderTable();
+      }
+
+      function renderTable() {
+        const q = document.getElementById("search-inp").value.toLowerCase();
+        const shown = allUsers.filter(
+          (u) =>
+            u.name.toLowerCase().includes(q) ||
+            u.email.toLowerCase().includes(q),
+        );
+        if (shown.length === 0) {
+          document.getElementById("table-wrap").innerHTML =
+            '<div class="empty-row">No users found.</div>';
+          return;
+        }
+        document.getElementById("table-wrap").innerHTML =
+          "<table><thead><tr><th>User</th><th>Email</th><th>Age</th><th>Joined</th><th>Actions</th></tr></thead><tbody>" +
+          shown
+            .map(
+              (u) => `
+      <tr>
+        <td><div class="user-cell">
+          <div class="avatar" style="background:${avatarColor(u.id)};width:36px;height:36px;font-size:13px">${initials(u.name)}</div>
+          <span class="user-name">${escHtml(u.name)}</span>
+        </div></td>
+        <td>${escHtml(u.email)}</td>
+        <td>${u.age}</td>
+        <td>${new Date(u.created_at).toLocaleDateString()}</td>
+        <td><div class="action-row">
+          <button class="edit-btn" onclick="openEditModal(${u.id})">Edit</button>
+          <button class="del-btn"  onclick="openDeleteModal(${u.id})">Delete</button>
+        </div></td>
+      </tr>`,
+            )
+            .join("") +
+          "</tbody></table>";
+      }
+
+      function openAddModal() {
+        editingId = null;
+        document.getElementById("modal-title").textContent = "Add New User";
+        document.getElementById("modal-save-btn").textContent = "Add User";
+        document.getElementById("m-password-wrap").style.display = "block";
+        ["m-name", "m-email", "m-age", "m-password"].forEach((id) => {
+          document.getElementById(id).value = "";
+          document.getElementById(id).classList.remove("err");
+        });
+        ["err-m-name", "err-m-email", "err-m-age", "err-m-password"].forEach(
+          (id) => (document.getElementById(id).textContent = ""),
+        );
+        document.getElementById("form-modal").classList.add("show");
+      }
+
+      function openEditModal(id) {
+        const u = allUsers.find((u) => u.id === id);
+        if (!u) return;
+        editingId = id;
+        document.getElementById("modal-title").textContent = "Edit User";
+        document.getElementById("modal-save-btn").textContent = "Save Changes";
+        document.getElementById("m-password-wrap").style.display = "none";
+        document.getElementById("m-name").value = u.name;
+        document.getElementById("m-email").value = u.email;
+        document.getElementById("m-age").value = u.age;
+        ["m-name", "m-email", "m-age"].forEach((id) =>
+          document.getElementById(id).classList.remove("err"),
+        );
+        ["err-m-name", "err-m-email", "err-m-age"].forEach(
+          (id) => (document.getElementById(id).textContent = ""),
+        );
+        document.getElementById("form-modal").classList.add("show");
+      }
+
+      async function saveUser() {
+        let valid = true;
+        const name = document.getElementById("m-name").value.trim();
+        const email = document.getElementById("m-email").value.trim();
+        const age = document.getElementById("m-age").value;
+        const pass = document.getElementById("m-password").value;
+
+        ["err-m-name", "err-m-email", "err-m-age", "err-m-password"].forEach(
+          (id) => (document.getElementById(id).textContent = ""),
+        );
+        ["m-name", "m-email", "m-age", "m-password"].forEach((id) =>
+          document.getElementById(id).classList.remove("err"),
+        );
+
+        if (!name || name.length < 2) {
+          document.getElementById("err-m-name").textContent =
+            "Min 2 characters";
+          document.getElementById("m-name").classList.add("err");
+          valid = false;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("err-m-email").textContent =
+            "Valid email required";
+          document.getElementById("m-email").classList.add("err");
+          valid = false;
+        }
+        if (!age || isNaN(age) || Number(age) < 1 || Number(age) > 120) {
+          document.getElementById("err-m-age").textContent =
+            "Age 1–120 required";
+          document.getElementById("m-age").classList.add("err");
+          valid = false;
+        }
+        if (!editingId && (!pass || pass.length < 6)) {
+          document.getElementById("err-m-password").textContent =
+            "Min 6 characters";
+          document.getElementById("m-password").classList.add("err");
+          valid = false;
+        }
+        if (!valid) return;
+
+        const btn = document.getElementById("modal-save-btn");
+        btn.disabled = true;
+        btn.textContent = "Saving…";
+        const body = {
+          name,
+          email,
+          age: Number(age),
+        };
+        if (!editingId) body.password = pass;
+        const res = editingId
+          ? await apiFetch("/users/" + editingId, "PUT", body)
+          : await apiFetch("/users", "POST", body);
+        btn.disabled = false;
+        btn.textContent = editingId ? "Save Changes" : "Add User";
+        if (!res.success) {
+          showToast(res.message, false);
+          return;
+        }
+        showToast(editingId ? "User updated!" : "User added!", true);
+        closeModal("form-modal");
+        loadUsers();
+      }
+
+      function openDeleteModal(id) {
+        const u = allUsers.find((u) => u.id === id);
+        if (!u) return;
+        deletingUser = u;
+        document.getElementById("del-msg").innerHTML =
+          "Are you sure you want to delete <strong>" +
+          escHtml(u.name) +
+          "</strong>? This cannot be undone.";
+        document.getElementById("del-modal").classList.add("show");
+      }
+
+      async function confirmDelete() {
+        if (!deletingUser) return;
+        const res = await apiFetch("/users/" + deletingUser.id, "DELETE");
+        if (!res.success) {
+          showToast(res.message, false);
+          return;
+        }
+        showToast("User deleted.", true);
+        closeModal("del-modal");
+        deletingUser = null;
+        loadUsers();
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove("show");
+      }
+
+      function logout() {
+        localStorage.removeItem("uv_token");
+        localStorage.removeItem("uv_user");
+        token = null;
+        authUser = null;
+        allUsers = [];
+        document.getElementById("dashboard-page").style.display = "none";
+        document.getElementById("auth-page").style.display = "flex";
+        document.getElementById("auth-email").value = "";
+        document.getElementById("auth-password").value = "";
+      }
+
+      let toastTimer = null;
+
+      function showToast(msg, ok) {
+        const old = document.getElementById("toast-el");
+        if (old) old.remove();
+        if (toastTimer) clearTimeout(toastTimer);
+        const t = document.createElement("div");
+        t.id = "toast-el";
+        t.className = "toast";
+        t.textContent = msg;
+        t.style.background = ok ? "#14532d" : "#450a0a";
+        t.style.borderColor = ok ? "#16a34a" : "#ef4444";
+        document.body.appendChild(t);
+        toastTimer = setTimeout(() => t.remove(), 2600);
+      }
+
+      function escHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      if (token && authUser) showDashboard();
+    </script>
+  </body>
+</html>

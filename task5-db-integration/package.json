@@ -1,0 +1,17 @@
+{
+  "name": "task5-db-integration",
+  "version": "1.0.0",
+  "description": "SaiKet Systems Internship Task 5 — REST API with MySQL",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

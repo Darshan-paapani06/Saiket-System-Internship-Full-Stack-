@@ -1,0 +1,969 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow — SaiKet Systems Task 3</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", system-ui, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0f0f1a 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding: 40px 16px;
+      }
+
+      ::placeholder {
+        color: rgba(255, 255, 255, 0.22);
+      }
+
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: rgba(99, 102, 241, 0.4);
+        border-radius: 10px;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: 620px;
+      }
+
+      .top-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: rgba(99, 102, 241, 0.12);
+        border: 1px solid rgba(99, 102, 241, 0.28);
+        border-radius: 100px;
+        padding: 6px 18px;
+        width: fit-content;
+        margin: 0 auto 18px;
+        font-size: 11px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #a5b4fc;
+      }
+
+      .pulse {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #6366f1;
+        display: inline-block;
+        animation: pulse 1.6s infinite;
+        flex-shrink: 0;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 44px;
+        font-weight: 800;
+        color: #fff;
+        margin: 0 0 8px;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+      }
+
+      h1 span {
+        color: #6366f1;
+      }
+
+      .sub {
+        text-align: center;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.35);
+        margin: 0 0 28px;
+      }
+
+      .stats-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .stat-box {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .stat-num {
+        font-size: 30px;
+        font-weight: 800;
+        margin-bottom: 4px;
+      }
+
+      .stat-lbl {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+      }
+
+      .bar-track {
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 100px;
+        height: 5px;
+        overflow: hidden;
+        margin-bottom: 6px;
+      }
+
+      .bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+        border-radius: 100px;
+        transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        width: 0%;
+      }
+
+      .pct-text {
+        text-align: center;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.3);
+        margin-bottom: 24px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 22px;
+        overflow: hidden;
+      }
+
+      .section {
+        padding: 22px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      input,
+      select {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1.5px solid rgba(255, 255, 255, 0.12);
+        border-radius: 11px;
+        padding: 12px 15px;
+        font-size: 14px;
+        color: #fff;
+        outline: none;
+        transition: border-color 0.25s;
+        font-family: inherit;
+        width: 100%;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #6366f1;
+      }
+
+      select option {
+        background: #1a1a2e;
+        color: #fff;
+      }
+
+      .add-btn {
+        background: #6366f1;
+        border: none;
+        border-radius: 11px;
+        padding: 12px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s;
+        white-space: nowrap;
+        font-family: inherit;
+      }
+
+      .add-btn:hover {
+        background: #4f46e5;
+      }
+
+      .pri-label {
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.3);
+        white-space: nowrap;
+      }
+
+      .pri-chip {
+        padding: 5px 14px;
+        border-radius: 100px;
+        font-size: 12px;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: transparent;
+        color: rgba(255, 255, 255, 0.38);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .pri-chip.active-Low {
+        background: #dcfce7;
+        color: #166534;
+        border-color: #86efac;
+      }
+
+      .pri-chip.active-Medium {
+        background: #fef9c3;
+        color: #854d0e;
+        border-color: #fde047;
+      }
+
+      .pri-chip.active-High {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fca5a5;
+      }
+
+      .filter-row {
+        display: flex;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 3px;
+        gap: 3px;
+        flex-shrink: 0;
+      }
+
+      .f-btn {
+        padding: 7px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.4);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .f-btn.active {
+        background: #6366f1;
+        color: #fff;
+      }
+
+      .task-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.2s;
+        cursor: grab;
+      }
+
+      .task-row:last-child {
+        border-bottom: none;
+      }
+
+      .task-row:hover {
+        background: rgba(99, 102, 241, 0.05);
+      }
+
+      .task-row.drag-over {
+        background: rgba(99, 102, 241, 0.12);
+      }
+
+      .grip {
+        color: rgba(255, 255, 255, 0.18);
+        font-size: 16px;
+        padding-top: 2px;
+        flex-shrink: 0;
+        user-select: none;
+      }
+
+      .check-btn {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        background: transparent;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-top: 1px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: inherit;
+      }
+
+      .check-btn.done {
+        background: #6366f1;
+        border-color: #6366f1;
+      }
+
+      .task-text {
+        font-size: 14px;
+        color: #e2e8f0;
+        word-break: break-word;
+        margin-bottom: 5px;
+        transition: all 0.25s;
+      }
+
+      .task-text.done {
+        text-decoration: line-through;
+        color: rgba(255, 255, 255, 0.28);
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .badge-Low {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+      }
+
+      .badge-Medium {
+        background: #fef9c3;
+        color: #854d0e;
+        border: 1px solid #fde047;
+      }
+
+      .badge-High {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .edit-btn {
+        background: rgba(99, 102, 241, 0.12);
+        border: 1px solid rgba(99, 102, 241, 0.25);
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 12px;
+        color: #a5b4fc;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: inherit;
+      }
+
+      .edit-btn:hover {
+        background: rgba(99, 102, 241, 0.3);
+      }
+
+      .del-btn {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
+        padding: 7px 14px;
+        font-size: 12px;
+        color: #fca5a5;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: inherit;
+      }
+
+      .del-btn:hover {
+        background: rgba(239, 68, 68, 0.28);
+      }
+
+      .edit-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .edit-input {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .save-btn {
+        background: #6366f1;
+        border: none;
+        border-radius: 8px;
+        padding: 6px 16px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .cancel-btn {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .task-footer {
+        padding: 13px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-text {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.28);
+      }
+
+      .clear-btn {
+        background: none;
+        border: none;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.28);
+        cursor: pointer;
+        transition: color 0.2s;
+        font-family: inherit;
+      }
+
+      .clear-btn:hover {
+        color: #fca5a5;
+      }
+
+      .empty {
+        padding: 44px 24px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.22);
+        font-size: 14px;
+      }
+
+      .hint {
+        text-align: center;
+        margin-top: 16px;
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.18);
+        letter-spacing: 0.06em;
+      }
+
+      .toast {
+        position: fixed;
+        bottom: 26px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 26px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #fff;
+        border: 1px solid;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        z-index: 9999;
+        white-space: nowrap;
+        animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateX(-50%) translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 500;
+        padding: 16px;
+      }
+
+      .modal {
+        background: #1e1e2e;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 28px;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .modal h3 {
+        color: #fff;
+        font-size: 17px;
+        font-weight: 700;
+        margin-bottom: 18px;
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .modal-save {
+        flex: 1;
+        background: #6366f1;
+        border: none;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #fff;
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .modal-cancel {
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 12px 18px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        font-family: inherit;
+      }
+
+      .field-label {
+        display: block;
+        font-size: 11px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.4);
+        margin-bottom: 6px;
+        margin-top: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="top-badge">
+        <span class="pulse"></span> SaiKet Systems · Task 3
+      </div>
+      <h1>Task<span>Flow</span></h1>
+      <p class="sub">
+        Vanilla JS To-Do · Add · Edit · Delete · Drag &amp; Drop
+      </p>
+
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-num" id="stat-total" style="color: #6366f1">0</div>
+          <div class="stat-lbl">Total</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-active" style="color: #f59e0b">0</div>
+          <div class="stat-lbl">Active</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="stat-done" style="color: #10b981">0</div>
+          <div class="stat-lbl">Done</div>
+        </div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" id="bar-fill"></div>
+      </div>
+      <p class="pct-text" id="pct-text">0% complete</p>
+
+      <div class="card">
+        <div class="section">
+          <div class="row" style="margin-bottom: 10px">
+            <input
+              id="task-input"
+              placeholder="What needs to be done?"
+              style="flex: 1"
+            />
+            <button class="add-btn" onclick="addTask()">+ Add</button>
+          </div>
+          <div class="row">
+            <span class="pri-label">Priority:</span>
+            <button
+              class="pri-chip active-Medium"
+              id="pri-Low"
+              onclick="setPri('Low')"
+            >
+              Low
+            </button>
+            <button
+              class="pri-chip active-Medium"
+              id="pri-Medium"
+              onclick="setPri('Medium')"
+            >
+              Medium
+            </button>
+            <button
+              class="pri-chip active-Medium"
+              id="pri-High"
+              onclick="setPri('High')"
+            >
+              High
+            </button>
+          </div>
+        </div>
+        <div class="section row" style="gap: 12px">
+          <input
+            id="search-input"
+            placeholder="Search tasks…"
+            style="flex: 1"
+            oninput="render()"
+          />
+          <div class="filter-row">
+            <button class="f-btn active" id="f-All" onclick="setFilter('All')">
+              All
+            </button>
+            <button class="f-btn" id="f-Active" onclick="setFilter('Active')">
+              Active
+            </button>
+            <button
+              class="f-btn"
+              id="f-Completed"
+              onclick="setFilter('Completed')"
+            >
+              Completed
+            </button>
+          </div>
+        </div>
+        <div id="task-list"></div>
+        <div class="task-footer">
+          <span class="footer-text" id="footer-left">0 tasks remaining</span>
+          <button
+            class="clear-btn"
+            id="clear-btn"
+            onclick="clearDone()"
+            style="display: none"
+          >
+            Clear completed
+          </button>
+        </div>
+      </div>
+      <p class="hint">DRAG TO REORDER · ENTER TO ADD · DOUBLE-CLICK TO EDIT</p>
+    </div>
+
+    <div class="modal-bg" id="edit-modal" style="display: none">
+      <div class="modal">
+        <h3>Edit Task</h3>
+        <label class="field-label">Task Name</label>
+        <input id="edit-text" style="width: 100%" />
+        <label class="field-label">Priority</label>
+        <select id="edit-pri" style="width: 100%">
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+        <div class="modal-actions">
+          <button class="modal-save" onclick="saveEdit()">Save Changes</button>
+          <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let tasks = [
+        {
+          id: 1,
+          text: "Build the portfolio website",
+          priority: "High",
+          done: false,
+        },
+        {
+          id: 2,
+          text: "Learn JavaScript DOM deeply",
+          priority: "Medium",
+          done: false,
+        },
+        {
+          id: 3,
+          text: "Set up Node.js REST API",
+          priority: "High",
+          done: true,
+        },
+        {
+          id: 4,
+          text: "Integrate MySQL database",
+          priority: "Low",
+          done: false,
+        },
+      ];
+      let nextId = 10;
+      let currentPri = "Medium";
+      let currentFilter = "All";
+      let editingId = null;
+      let dragId = null;
+
+      const priStyles = {
+        Low: {
+          bg: "#dcfce7",
+          color: "#166534",
+          border: "#86efac",
+        },
+        Medium: {
+          bg: "#fef9c3",
+          color: "#854d0e",
+          border: "#fde047",
+        },
+        High: {
+          bg: "#fee2e2",
+          color: "#991b1b",
+          border: "#fca5a5",
+        },
+      };
+
+      document.getElementById("task-input").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") addTask();
+      });
+
+      function setPri(p) {
+        currentPri = p;
+        ["Low", "Medium", "High"].forEach((x) => {
+          const b = document.getElementById("pri-" + x);
+          b.className = "pri-chip" + (x === p ? " active-" + x : "");
+        });
+      }
+      setPri("Medium");
+
+      function setFilter(f) {
+        currentFilter = f;
+        ["All", "Active", "Completed"].forEach((x) => {
+          document.getElementById("f-" + x).className =
+            "f-btn" + (x === f ? " active" : "");
+        });
+        render();
+      }
+
+      function addTask() {
+        const inp = document.getElementById("task-input");
+        const text = inp.value.trim();
+        if (!text) {
+          inp.focus();
+          return;
+        }
+        tasks.unshift({
+          id: nextId++,
+          text,
+          priority: currentPri,
+          done: false,
+        });
+        inp.value = "";
+        render();
+        showToast("Task added!", true);
+        inp.focus();
+      }
+
+      function toggleDone(id) {
+        const t = tasks.find((t) => t.id === id);
+        if (t) t.done = !t.done;
+        render();
+      }
+
+      function deleteTask(id) {
+        tasks = tasks.filter((t) => t.id !== id);
+        render();
+        showToast("Task deleted.", false);
+      }
+
+      function openEdit(id) {
+        const t = tasks.find((t) => t.id === id);
+        if (!t) return;
+        editingId = id;
+        document.getElementById("edit-text").value = t.text;
+        document.getElementById("edit-pri").value = t.priority;
+        document.getElementById("edit-modal").style.display = "flex";
+      }
+
+      function saveEdit() {
+        const text = document.getElementById("edit-text").value.trim();
+        const pri = document.getElementById("edit-pri").value;
+        if (!text) return;
+        const t = tasks.find((t) => t.id === editingId);
+        if (t) {
+          t.text = text;
+          t.priority = pri;
+        }
+        closeModal();
+        render();
+        showToast("Task updated!", true);
+      }
+
+      function closeModal() {
+        document.getElementById("edit-modal").style.display = "none";
+        editingId = null;
+      }
+
+      function clearDone() {
+        tasks = tasks.filter((t) => !t.done);
+        render();
+        showToast("Cleared completed tasks.", true);
+      }
+
+      function render() {
+        const search = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        const shown = tasks.filter((t) => {
+          const fMatch =
+            currentFilter === "All"
+              ? true
+              : currentFilter === "Active"
+                ? !t.done
+                : t.done;
+          return fMatch && t.text.toLowerCase().includes(search);
+        });
+
+        const total = tasks.length;
+        const done = tasks.filter((t) => t.done).length;
+        const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
+        document.getElementById("stat-total").textContent = total;
+        document.getElementById("stat-active").textContent = total - done;
+        document.getElementById("stat-done").textContent = done;
+        document.getElementById("bar-fill").style.width = pct + "%";
+        document.getElementById("pct-text").textContent = pct + "% complete";
+        document.getElementById("footer-left").textContent =
+          total - done + " task(s) remaining";
+        document.getElementById("clear-btn").style.display =
+          done > 0 ? "block" : "none";
+
+        const list = document.getElementById("task-list");
+        if (shown.length === 0) {
+          list.innerHTML =
+            '<div class="empty">No tasks found — add one above!</div>';
+          return;
+        }
+
+        list.innerHTML = shown
+          .map(
+            (t, idx) => `
+        <div class="task-row" id="row-${t.id}" draggable="true"
+          ondragstart="dragStart(${t.id})"
+          ondragover="dragOver(event, ${t.id})"
+          ondragleave="dragLeave(${t.id})"
+          ondrop="drop(${t.id})"
+          style="border-bottom:${idx < shown.length - 1 ? "1px solid rgba(255,255,255,.05)" : "none"}">
+          <span class="grip">⠿</span>
+          <button class="check-btn ${t.done ? "done" : ""}" onclick="toggleDone(${t.id})">${t.done ? "✓" : ""}</button>
+          <div style="flex:1;min-width:0">
+            <div class="task-text ${t.done ? "done" : ""}">${escHtml(t.text)}</div>
+            <span class="badge badge-${t.priority}">${t.priority}</span>
+          </div>
+          <div class="task-actions">
+            <button class="edit-btn" onclick="openEdit(${t.id})">Edit</button>
+            <button class="del-btn"  onclick="deleteTask(${t.id})">✕</button>
+          </div>
+        </div>
+      `,
+          )
+          .join("");
+      }
+
+      function escHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function dragStart(id) {
+        dragId = id;
+      }
+
+      function dragOver(e, id) {
+        e.preventDefault();
+        var el = document.getElementById("row-" + id);
+        if (el) {
+          el.classList.add("drag-over");
+        }
+      }
+
+      function dragLeave(id) {
+        var el = document.getElementById("row-" + id);
+        if (el) {
+          el.classList.remove("drag-over");
+        }
+      }
+
+      function drop(targetId) {
+        if (!dragId || dragId === targetId) return;
+        const fi = tasks.findIndex((t) => t.id === dragId);
+        const ti = tasks.findIndex((t) => t.id === targetId);
+        const [row] = tasks.splice(fi, 1);
+        tasks.splice(ti, 0, row);
+        dragId = null;
+        render();
+      }
+
+      let toastTimer = null;
+
+      function showToast(msg, ok) {
+        const old = document.getElementById("toast-el");
+        if (old) old.remove();
+        if (toastTimer) clearTimeout(toastTimer);
+        const t = document.createElement("div");
+        t.id = "toast-el";
+        t.className = "toast";
+        t.textContent = msg;
+        t.style.background = ok ? "#1e1b4b" : "#450a0a";
+        t.style.borderColor = ok ? "#6366f1" : "#ef4444";
+        document.body.appendChild(t);
+        toastTimer = setTimeout(() => t.remove(), 2600);
+      }
+
+      render();
+    </script>
+  </body>
+</html>
