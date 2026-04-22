@@ -8,7 +8,7 @@
 
 <br/><br/>
 
-<img src="https://img.shields.io/badge/Intern-Anusha%20ts-6366f1?style=for-the-badge&logo=person&logoColor=white"/>
+<img src="https://img.shields.io/badge/Intern-Darshan Gowda %20ts-6366f1?style=for-the-badge&logo=person&logoColor=white"/>
 <img src="https://img.shields.io/badge/Company-SaiKet%20Systems-0ea5e9?style=for-the-badge&logo=building&logoColor=white"/>
 <img src="https://img.shields.io/badge/Domain-Full%20Stack-10b981?style=for-the-badge&logo=code&logoColor=white"/>
 <img src="https://img.shields.io/badge/Status-Completed%20✓-22c55e?style=for-the-badge&logo=checkmark&logoColor=white"/>
