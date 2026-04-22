@@ -4,7 +4,7 @@
 
 <br/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&width=700&height=100&lines=Full+Stack+Development+%F0%9F%9A%80;6+Tasks+%C2%B7+6+Days+%C2%B7+One+Developer+%E2%9C%A8" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=28&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&multiline=true&width=700&height=100&lines=Full+Stack+Development+%F0%9F%9A%80;6+Tasks+%C2%B7+1+month+%C2%B7+One+Developer+%E2%9C%A8" alt="Typing SVG" />
 
 <br/><br/>
 
