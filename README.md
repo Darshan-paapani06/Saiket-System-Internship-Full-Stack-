@@ -475,6 +475,6 @@ cd task6-fullstack/server && npm install && node index.js
 
 **Made with ❤️ during SaiKet Systems Full Stack Development Internship**
 
-*© 2025 Anusha ts · SaiKet Systems Internship*
+*© 2026 Darshan Paapani · SaiKet Systems Internship*
 
 </div>
